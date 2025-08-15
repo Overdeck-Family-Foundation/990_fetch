@@ -25,9 +25,4 @@ jobs:
     - name: execute py script
       run: python 990_pipeline.py
       env:
-        CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }} 
-    - name: Git Auto Commit
-      uses: stefanzweifel/git-auto-commit-action@v4.16.0
-      with:
-        commit_message: 990 Data fetch
-        branch: main
+        CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
