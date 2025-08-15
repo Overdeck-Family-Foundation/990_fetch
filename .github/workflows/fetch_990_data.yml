@@ -1,0 +1,33 @@
+name: fetch-990-data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "00 05 * * *"    #runs at 05:00am UTC everyday
+
+jobs:
+  getdata:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3.5.3
+    - name: Setup Python
+      uses: actions/setup-python@v4.7.0
+      with:
+        python-version: 3.9
+    - name: Install Python dependencies
+      uses: py-actions/py-dependency-install@v4
+      with:
+        path: "requirements.txt"
+        update-pip: "false"
+        update-setuptools: "false"
+        update-wheel: "false"
+    - name: execute py script
+      run: python 990_pipeline.py
+      env:
+        CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }} 
+    - name: Git Auto Commit
+      uses: stefanzweifel/git-auto-commit-action@v4.16.0
+      with:
+        commit_message: 990 Data fetch
+        branch: main
