@@ -4,6 +4,7 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy import text
 from time import sleep
+import os
 
 def convert_dtypes(df):
     # try to convert obj to numeric /date
@@ -47,7 +48,7 @@ def process_gt_990_data(ein):
 
 
 # Define connection parameters
-db_url = "postgresql://neondb_owner:npg_Ol5jDigPQw2u@ep-super-tree-a5z2of0l-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
+db_url = os.environ.get("BASEROW_ACCESS_TOKEN")
 
 # Create a database engine
 engine = create_engine(db_url)
@@ -102,5 +103,6 @@ with engine.connect() as conn:
         ADD PRIMARY KEY (id);
     """))
 print(f"Table '{new_table_name}' written to the database and 'id' set as primary key.")
+
 
 grantee_990s.to_csv('grantee_990s_data.csv', index=False)
