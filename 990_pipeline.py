@@ -48,7 +48,7 @@ def process_gt_990_data(ein):
 
 
 # Define connection parameters
-db_url = os.environ.get("BASEROW_ACCESS_TOKEN")
+db_url = os.environ.get("CONNECTION_STRING")
 
 # Create a database engine
 engine = create_engine(db_url)
@@ -106,3 +106,4 @@ print(f"Table '{new_table_name}' written to the database and 'id' set as primary
 
 
 grantee_990s.to_csv('grantee_990s_data.csv', index=False)
+
