@@ -59,17 +59,6 @@ query = f"SELECT * FROM {table_name}"
 ext_orgs = pd.read_sql_query(query, engine)
 
 ext_orgs = ext_orgs[['org_id','ein','org_type','org_name']]
-
-## Giving Tuesday 990 data columns
-gt_cols = ['FILEREIN','FILERNAME1','TAXYEAR','TAXPERBEGIN','TAXPEREND','TOTREVCURYEA','TOTEXPCURYEA','CYYRRELEEXXP','TOASEOOYY','TOLIEOOYY','NAFBEOY','MEMBERDUESUE','GOVERNGRANTS',
-           'ALLOOTHECONT','TOTACASHCONT','TOTPROSERREV','GROINCFUNEVE','FUNDDIREEXPE','TORETORECOOL','TOTFUNEXPTOT','PROGSERVEXPE','MANAGENEEXPE','FUNDRAEXPENS','TOTAEMPLCNTN']
-
-gt_col_names = ['ein','organization_name','year','year_start','year_end','revenue_total','expenses_total','net_profit_loss','total_assets','total_liabilities','net_assets','membership_dues','revenue_public',
-                'revenue_other_contributions','total_contributed_revenue','revenue_earned','revenue_fundraising','fundraising_expense','revenue_total_b','expenses_total_b','expense_program_services',
-                'expense_administration','expense_fundraising','num_employees']
-
-gt_col_mapping = dict(zip(gt_cols, gt_col_names))
-
 ext_orgs['ein_query'] = ext_orgs.ein.apply(lambda x: str(x).replace("-", "").zfill(9))
 
 grantee_990s = []
@@ -86,6 +75,7 @@ for e in ext_orgs.ein_query.unique():
 grantee_990s = pd.concat(grantee_990s, ignore_index=True)
 grantee_990s.fillna(0, inplace=True)
 grantee_990s['ein'] = grantee_990s.ein.astype(str)
+grantee_990s = grantee_990s.merge(ext_orgs, left_on='ein', right_on='ein_query', how='left')
 grantee_990s = grantee_990s.drop(columns=['ein_query','ein_x','organization_name']).rename(columns={'ein_y':'ein'})
 grantee_990s['id'] = range(1, len(grantee_990s) + 1)
 
@@ -106,4 +96,5 @@ print(f"Table '{new_table_name}' written to the database and 'id' set as primary
 
 
 grantee_990s.to_csv('grantee_990s_data.csv', index=False)
+
 
