@@ -95,6 +95,3 @@ with engine.connect() as conn:
 print(f"Table '{new_table_name}' written to the database and 'id' set as primary key.")
 
 
-grantee_990s.to_csv('grantee_990s_data.csv', index=False)
-
-
