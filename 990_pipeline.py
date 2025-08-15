@@ -76,7 +76,7 @@ grantee_990s = pd.concat(grantee_990s, ignore_index=True)
 grantee_990s.fillna(0, inplace=True)
 grantee_990s['ein'] = grantee_990s.ein.astype(str)
 grantee_990s = grantee_990s.merge(ext_orgs, left_on='ein', right_on='ein_query', how='left')
-grantee_990s = grantee_990s.drop(columns=['ein_query','ein_x','organization_name']).rename(columns={'ein_y':'ein'})
+grantee_990s = grantee_990s.drop(columns=['ein_y','ein_x','organization_name']).rename(columns={'ein_query':'ein'})
 grantee_990s['id'] = range(1, len(grantee_990s) + 1)
 
 new_table_name = "external_orgs_990_data"
@@ -93,5 +93,6 @@ with engine.connect() as conn:
         ADD PRIMARY KEY (id);
     """))
 print(f"Table '{new_table_name}' written to the database and 'id' set as primary key.")
+
 
 
